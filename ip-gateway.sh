@@ -1,6 +1,12 @@
+if [ -z "$SUBNET" ]; then
+    SUMNET=192.168.123.0/24
+fi
+
 # 网关
+iptables -t nat -F clash #删除链
+iptables -t nat -X clash
 iptables -t nat -N clash
-iptables -t nat -A POSTROUTING -s 192.168.123.0/24 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s "$SUBNET" -j MASQUERADE
 # 排除本地连接
 iptables -t nat -A clash -d 0.0.0.0/8 -j RETURN
 iptables -t nat -A clash -d 10.0.0.0/8 -j RETURN
