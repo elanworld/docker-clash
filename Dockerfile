@@ -11,4 +11,5 @@ RUN mv Country.mmdb /.config/clash
 RUN chown -R 1001:1001 "/.config"
 RUN chown -R 1001:1001 "/app"
 RUN chmod -R +x /app
-CMD /app/entrypoint.sh
+RUN adduser -h / -u 1001 -g 1001 -D clash
+CMD sh /app/entrypoint.sh

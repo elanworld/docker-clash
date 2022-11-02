@@ -10,7 +10,6 @@ services:
     privileged: true
     restart: always
     environment:
-      SUBNET: 192.168.123.0/24
       TZ: Asia/Shanghai
     volumes:
       - /data/clash:/app/config
