@@ -9,11 +9,11 @@ fi
 # do network config
 sysctl -w net.ipv4.ip_forward=1
 # delete
-iptables -t nat -F clash # clenr
-iptables -t nat -X clash # delete
-iptables -t nat -D POSTROUTING -s "$SUBNET" -j MASQUERADE
-iptables -t nat -D PREROUTING -p tcp -j clash
-iptables -t nat -D OUTPUT -p tcp -m owner ! --uid-owner 1001 -j REDIRECT --to-ports 7892
+iptables -t nat -F clash || echo not exists chain # clenr
+iptables -t nat -X clash || echo not exists chain # delete
+iptables -t nat -D POSTROUTING -s "$SUBNET" -j MASQUERADE || echo not exists chain
+iptables -t nat -D PREROUTING -p tcp -j clash || echo not exists chain
+iptables -t nat -D OUTPUT -p tcp -m owner ! --uid-owner 1001 -j REDIRECT --to-ports 7892 || echo not exists chain
 
 # add rule
 iptables -t nat -N clash # new
@@ -29,7 +29,6 @@ iptables -t nat -A clash -d 172.16.0.0/12 -j RETURN
 iptables -t nat -A clash -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A clash -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A clash -d 240.0.0.0/4 -j RETURN
-redisct
 iptables -t nat -A clash -p tcp -j REDIRECT --to-ports 7892
 
 #show result
