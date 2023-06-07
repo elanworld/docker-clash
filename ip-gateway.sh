@@ -1,15 +1,26 @@
+# check
 if [ -z "$SUBNET" ]; then
     SUMNET=192.168.1.0/24
 fi
+if [ "$SUBNET" == "x.x.x.x/24" ]; then
+    echo "ERROR: subnet error $SUBNET"
+fi
 
-# 网关
-iptables -t nat -F clash #删除链
-iptables -t nat -X clash
-iptables -t nat -N clash
+# do network config
+sysctl -w net.ipv4.ip_forward=1
+# delete
+iptables -t nat -F clash # clenr
+iptables -t nat -X clash # delete
+iptables -t nat -D POSTROUTING -s "$SUBNET" -j MASQUERADE
+iptables -t nat -D PREROUTING -p tcp -j clash
+iptables -t nat -D OUTPUT -p tcp -m owner ! --uid-owner 1001 -j REDIRECT --to-ports 7892
+
+# add rule
+iptables -t nat -N clash # new
 iptables -t nat -A POSTROUTING -s "$SUBNET" -j MASQUERADE
 iptables -t nat -A PREROUTING -p tcp -j clash
-iptables -t nat -A OUTPUT -p tcp  -m owner ! --uid-owner 1001 -j REDIRECT --to-ports 7892 # 代理本地，除了1000 uid clash用户
-# 排除本地连接
+iptables -t nat -A OUTPUT -p tcp  -m owner ! --uid-owner 1001 -j REDIRECT --to-ports 7892 # proxy tcp,except 1000 uid clash user
+# chain clash
 iptables -t nat -A clash -d 0.0.0.0/8 -j RETURN
 iptables -t nat -A clash -d 10.0.0.0/8 -j RETURN
 iptables -t nat -A clash -d 127.0.0.0/8 -j RETURN
@@ -18,5 +29,8 @@ iptables -t nat -A clash -d 172.16.0.0/12 -j RETURN
 iptables -t nat -A clash -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A clash -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A clash -d 240.0.0.0/4 -j RETURN
-#透明代理重定向
+redisct
 iptables -t nat -A clash -p tcp -j REDIRECT --to-ports 7892
+
+#show result
+iptables -t nat -L

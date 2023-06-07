@@ -1,4 +1,3 @@
-echo SUBNET: $SUBNET
 if [ -n "$SUBNET" ]; then
     sh ip-gateway.sh
 fi
