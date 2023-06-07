@@ -1,9 +1,9 @@
 FROM alpine:3.15
 WORKDIR /app
 RUN apk add iptables
-RUN wget https://github.com/Dreamacro/clash/releases/download/v1.11.8/clash-linux-amd64-v1.11.8.gz
+RUN  if [ "aarch64" == $(uname -m) ]; then echo aarch64;wget https://github.com/Dreamacro/clash/releases/download/v1.11.8/clash-linux-armv8-v1.11.8.gz -O clash.gz; else if [ "x86_64" == $(uname -m) ]; then echo x86_64;wget https://github.com/Dreamacro/clash/releases/download/v1.11.8/clash-linux-amd64-v1.11.8.gz -O clash.gz; fi; fi
 RUN wget https://github.com/Dreamacro/maxmind-geoip/releases/latest/download/Country.mmdb
-RUN gunzip -c clash-linux-amd64-v1.11.8.gz > clash
+RUN gunzip -c clash.gz > clash
 ADD ./ .
 RUN mkdir -p "/.config/clash"
 RUN mkdir -p "/app/config"
