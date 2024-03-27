@@ -13,4 +13,4 @@ RUN chown -R 1001:1001 "/app"
 RUN chmod -R +x /app
 RUN adduser -h / -u 1001 -g 1001 -D clash
 CMD sh /app/entrypoint.sh
-# docker buildx build --platform linux/amd64,linux/arm/v7  -t alanwoods/clash --push  .
+# docker buildx build --platform linux/amd64,linux/arm64/v8  -t alanwoods/clash --push  .
