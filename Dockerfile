@@ -3,8 +3,7 @@ WORKDIR /app
 RUN apk add iptables
 RUN  if [ "aarch64" == $(uname -m) ]; then echo aarch64;wget https://github.com/Kuingsmile/clash-core/releases/download/1.18/clash-linux-arm64-v1.18.0.gz -O clash.gz; else if [ "x86_64" == $(uname -m) ]; then echo x86_64;wget https://github.com/Kuingsmile/clash-core/releases/download/1.18/clash-linux-amd64-v1.18.0.gz -O clash.gz; fi; fi
 RUN wget https://github.com/Dreamacro/maxmind-geoip/releases/latest/download/Country.mmdb
-RUN gunzip -c clash.gz > clash
-RUN rm clash.gz
+RUN gunzip -c clash.gz > clash && rm -f clash.gz
 ADD ./ .
 RUN mkdir -p "/.config/clash"
 RUN mkdir -p "/app/config"
